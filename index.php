@@ -10,10 +10,6 @@
     <?php 
         require('./class/Village.class.php');
         session_start();
-
-        
-        
-        
         if(!isset($_SESSION['v'])) // jeżeli nie ma w sesji naszej wioski
         {
             echo "Tworzę nową wioskę...";
@@ -28,13 +24,42 @@
             //ilosc sekund od ostatniego odświerzenia strony
             $deltaTime = time() - $_SESSION['time'];
         }
-        
         $v->gain($deltaTime);
+        
+        if(isset($_REQUEST['action'])) 
+        {
+            switch($_REQUEST['action'])
+            {
+                case 'upgradeBuilding':
+                    if($v->upgradeBuilding($_REQUEST['building']))
+                    {
+                        echo "Ulepszono budynek: ".$_REQUEST['building'];
+                    }
+                    else
+                    {
+                        echo "Nie udało się ulepszyć budynku: ".$_REQUEST['building'];
+                    }
+                    
+                break;
+                default:
+                    echo 'Nieprawidłowa zmienna "action"';
+            }
+        }
+
+
+
 
         $_SESSION['time'] = time();
-
         var_dump($v);
+        var_dump($_REQUEST);
+        
     ?>
     </pre>
+    <a href="index.php?action=upgradeBuilding&building=woodcutter">
+        <button>Rozbuduj drwala</button>
+    </a>
+    <a href="index.php?action=upgradeBuilding&building=ironMine">
+        <button>Rozbuduj kopalnie żelaza</button>
+    </a>
 </body>
 </html>
