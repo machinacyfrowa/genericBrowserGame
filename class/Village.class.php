@@ -9,9 +9,11 @@ class Village
         $this->buildings = array(
             'townHall' => 1,
             'woodcutter' => 1,
+            'ironMine' => 1,
         );
         $this->storage = array(
             'wood' => 0,
+            'iron' => 0,
         );
     }
     private function woodGain(int $deltaTime) : float
@@ -23,9 +25,19 @@ class Village
         //zwracamy zysk w czasie $deltaTime
         return $perSecondGain * $deltaTime;
     }
+    private function ironGain(int $deltaTime) : float
+    {
+        //liczymy zysk na godzine z wzoru poziom_drwala ^ 2
+        $gain = pow($this->buildings['ironMine'],2) * 50;
+        // liczymy zysk na sekunde (godzina/3600)
+        $perSecondGain = $gain / 3600;
+        //zwracamy zysk w czasie $deltaTime
+        return $perSecondGain * $deltaTime;
+    }
     public function gain($deltaTime) 
     {
         $this->storage['wood'] += $this->woodGain($deltaTime);
+        $this->storage['iron'] += $this->ironGain($deltaTime);
     }
 }
 ?>
