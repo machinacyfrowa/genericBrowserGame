@@ -79,5 +79,34 @@ class Village
         $this->buildings[$buildingName] += 1; 
         return true;
     }
+    public function showHourGain(string $resource) : string
+    {
+        switch($resource) {
+            case 'wood':
+                return $this->woodGain(3600);
+            break;
+            case 'iron':
+                return $this->ironGain(3600);
+            break;
+            default:
+                echo "Nie ma takiego surowca!";
+            break;
+        }
+    }
+    public function showStorage(string $resource) : string 
+    {
+        if(isset($this->storage[$resource]))
+        {
+            return floor($this->storage[$resource]);
+        }
+        else
+        {
+            return "Nie ma takiego surowca!";
+        }
+    }
+    public function buildingLVL(string $building) : int 
+    {
+        return $this->buildings[$building];
+    }
 }
 ?>
