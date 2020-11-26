@@ -4,9 +4,12 @@ class Village
     private $buildings;
     private $storage;
     private $upgradeCost;
+    private $l;
 
     public function __construct()
     {
+        $this->l = $_SESSION['l'];
+
         $this->buildings = array(
             'townHall' => 1,
             'woodcutter' => 1,
@@ -61,6 +64,12 @@ class Village
         $this->storage['wood'] += $this->woodGain($deltaTime);
         $this->storage['iron'] += $this->ironGain($deltaTime);
     }
+    public function showUpgradeCost(string $buildingName, string $resource) : int
+    {
+        $currentLVL = $this->buildings[$buildingName];
+        $cost = $this->upgradeCost[$buildingName][$currentLVL+1];
+        return $cost[$resource];
+    }
     public function upgradeBuilding(string $buildingName) : bool
     {
         $currentLVL = $this->buildings[$buildingName];
@@ -69,6 +78,7 @@ class Village
             //key - nazwa surowca
             //value koszt surowca
             if($value > $this->storage[$key])
+                $this->log("Zbyt mało surowców do ulepszenia budynku", "alert");
                 return false;
         }
         foreach ($cost as $key => $value) {
@@ -107,6 +117,11 @@ class Village
     public function buildingLVL(string $building) : int 
     {
         return $this->buildings[$building];
+    }
+    private function log(string $message, $type)
+    {
+        
+        $this->l->log($message, $type);
     }
 }
 ?>

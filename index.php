@@ -1,17 +1,24 @@
 <?php 
         require('./class/Village.class.php');
+        require('./class/Log.class.php');
         session_start();
         if(!isset($_SESSION['v'])) // jeżeli nie ma w sesji naszej wioski
         {
+            $l = new Log();
+            $_SESSION['l'] = $l;
             echo "Tworzę nową wioskę...";
             $v = new Village();
             $_SESSION['v'] = $v;
+            
             //reset czasu od ostatniego odświerzenia strony
             $deltaTime = 0;
         } 
         else //mamy już wioskę w sesji - przywróć ją
         {
+            $l = $_SESSION['l'];
             $v = $_SESSION['v'];
+
+            
             //ilosc sekund od ostatniego odświerzenia strony
             $deltaTime = time() - $_SESSION['time'];
         }
@@ -37,9 +44,6 @@
             }
         }
 
-
-
-
         $_SESSION['time'] = time();
         
         
@@ -61,10 +65,10 @@
             <div class="col-12 col-md-6">
                 <div class="row">
                     <div class="col-12 col-md-3">
-                        Drewno: <?php echo $v->showStorage("wood"); ?>
+                        Drewno: <span id="woodStorage"><?php echo $v->showStorage("wood"); ?></span>
                     </div>
                     <div class="col-12 col-md-3">
-                        Żelazo: <?php echo $v->showStorage("iron"); ?>
+                        Żelazo: <span id="ironStorage"><?php echo $v->showStorage("iron"); ?></span>
                     </div>
                     <div class="col-12 col-md-3">
                         Zasób 3
@@ -81,11 +85,18 @@
         <main class="row border-bottom">
             <div class="col-12 col-md-3 border-right">
                 Lista budynków<br>
-                Drwal, poziom <?php echo $v->buildingLVL("woodcutter"); ?> <br>
-                Zysk/h: <?php echo $v->showHourGain("wood"); ?><br>
-                <a href="index.php?action=upgradeBuilding&building=woodcutter">
-                    <button>Rozbuduj drwala</button>
-                </a><br>
+                <div>
+                    Drwal, poziom <?php echo $v->buildingLVL("woodcutter"); ?> <br>
+                    Zysk/h: <?php echo $v->showHourGain("wood"); ?><br>
+                    <!--<a href="index.php?action=upgradeBuilding&building=woodcutter">-->
+                        <button onclick="upgradeBuilding(this)">Rozbuduj drwala</button>
+                        
+                    <!--</a>-->
+                    <br>
+                    Drewno: <span id="woodCost"><?php echo $v->showUpgradeCost("woodcutter", "wood"); ?></span>,
+                    Żelazo: <span id="ironCost"><?php echo $v->showUpgradeCost("woodcutter", "iron"); ?></span>,
+                </div>
+                
                 Kopalnia żelaza, poziom <?php echo $v->buildingLVL("ironMine"); ?> <br>
                 Zysk/h: <?php echo $v->showHourGain("iron"); ?><br>
                 <a href="index.php?action=upgradeBuilding&building=ironMine">
@@ -103,14 +114,51 @@
             <div class="col-12">
             <pre>
             <?php
-            var_dump($v);
-            var_dump($_REQUEST);
+                
+                $log = $l->getLog();
+                var_dump($log);
+                for($i = count($log) - 1 ; $i >= 0 ; $i--)
+                {
+                    $entry = $log[$i];
+                    $timestamp = $entry['timestamp'];
+                    $message = $entry['message'];
+                    echo "<p>$timestamp $message</p>";
+                }
+                /*
+                if($log[0]['type'] == 'alert')
+                echo '  <span id="alert" style="display: none;">'.$log[0]['message'].'</span> ';
+                */
             ?>
             </pre>
             </div>
         </footer>
     </div>
 
+  
+    <script>
+        /*
+        function showAlert()
+        {
+            let alertMsg = document.getElementById('alert').innerHTML;
+            if(alertMsg != "") 
+            {
+                window.alert(alertMsg)
+            }
+        }
+        */
+        function upgradeBuilding(guzik)
+        {
+            let div = guzik.parentNode;
+            let woodCost = parseInt(div.querySelector("#woodCost").innerHTML);
+            let ironCost = parseInt(div.querySelector("#ironCost").innerHTML);
+            let woodStorage = parseInt(document.getElementById('woodStorage').innerHTML);
+            let ironStorage = parseInt(document.getElementById('ironStorage').innerHTML);
+            if(woodCost > woodStorage || ironCost > ironStorage)
+                alert("Masz za mało surowców");
+            else
+                window.location = "index.php?action=upgradeBuilding&building=woodcutter";
+        }
+    </script>           
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 </body>
