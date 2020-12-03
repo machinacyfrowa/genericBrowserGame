@@ -1,20 +1,22 @@
 <?php 
-        require('./class/Village.class.php');
+        require_once('./class/GameManager.class.php');
         session_start();
-        if(!isset($_SESSION['v'])) // jeżeli nie ma w sesji naszej wioski
+        if(!isset($_SESSION['gm'])) // jeżeli nie ma w sesji naszej wioski
         {
-            echo "Tworzę nową wioskę...";
-            $v = new Village();
-            $_SESSION['v'] = $v;
+            echo "Tworzę nową gre...";
+            $gm = new GameManager();
+            $_SESSION['gm'] = $gm;
             //reset czasu od ostatniego odświerzenia strony
             $deltaTime = 0;
         } 
         else //mamy już wioskę w sesji - przywróć ją
         {
-            $v = $_SESSION['v'];
+            $gm = $_SESSION['gm'];
+            
             //ilosc sekund od ostatniego odświerzenia strony
             $deltaTime = time() - $_SESSION['time'];
         }
+        $v = $gm->v; //neizależnie cyz nowa gra czy załadowana
         $v->gain($deltaTime);
         
         if(isset($_REQUEST['action'])) 
