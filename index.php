@@ -10,7 +10,7 @@
         {
             $gm = $_SESSION['gm'];
         }
-        $v = $gm->v; //neizależnie cyz nowa gra czy załadowana
+        $v = $gm->v; //niezależnie cyz nowa gra czy załadowana
         $gm->sync(); //przelicz surowce
         
         if(isset($_REQUEST['action'])) 
@@ -31,13 +31,7 @@
                 default:
                     echo 'Nieprawidłowa zmienna "action"';
             }
-        }
-
-
-
-
-        
-        
+        }             
     ?>
 <!DOCTYPE html>
 <html lang="en">
