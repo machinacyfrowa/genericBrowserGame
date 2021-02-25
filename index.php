@@ -23,7 +23,8 @@
                 case 'townHall':
                     $buildingList = $v->buildingList();
                     $mainContent = "<table class=\"table table-bordered\">";
-                    $mainContent .= "<tr><th>Nazwa budyku</th><th>Poziom budynku</th><th>Koszt ulepszenia</th><th>Rozbudowa</th></tr>";
+                    $mainContent .= "<tr><th>Nazwa budyku</th><th>Poziom budynku</th>
+                                    <th>Produkcja/h / pojemność</th><th>Koszt ulepszenia</th><th>Rozbudowa</th></tr>";
                     foreach($buildingList as $index => $building) 
                     {
                         $name = $building['buildingName'];
@@ -33,7 +34,18 @@
                         {
                             $upgradeCost .= "$resource: $cost,";
                         }
-                        $mainContent .="<tr><td>$name</td><td>$level</td><td>$upgradeCost</td>";
+                        $mainContent .="<tr><td>$name</td><td>$level</td>";
+                        if(isset($building['capacity']))
+                        {
+                            $gain = $building['hourGain'];
+                            $cap = $building['capacity'];
+                            $mainContent .="<td>$gain / $cap</td>";
+                        }
+                        else 
+                        {
+                            $mainContent .="<td></td>";
+                        }
+                        $mainContent .="<td>$upgradeCost</td>";
                         if($v->checkBuildingUpgrade($name))
                             $mainContent .= 
                                 "<td><a href=\"index.php?action=upgradeBuilding&building=$name\">
@@ -86,8 +98,9 @@
             </div>
         </header>
         <main class="row border-bottom">
-            <div class="col-12 col-md-3 border-right">
+            <div class="col-12 col-md-2 border-right">
                 Lista budynków<br>
+                <!--
                 Drwal, poziom <?php echo $v->buildingLVL("woodcutter"); ?> <br>
                 Zysk/h: <?php echo $v->showHourGain("wood"); ?><br>
                 <?php if($v->checkBuildingUpgrade("woodcutter")) : ?>
@@ -108,16 +121,17 @@
                 <br>
                 <?php endif; ?>
                 <br>
+                -->
                 <a href="index.php?action=townHall">Ratusz</a>
             </div>
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-8">
                 <?php if(isset($mainContent)) : 
                     echo $mainContent; ?>
                 <?php else : ?>
                 Widok wioski
                 <?php endif; ?>
             </div>
-            <div class="col-12 col-md-3 border-left">
+            <div class="col-12 col-md-2 border-left">
                 Lista wojska
             </div>
         </main>
