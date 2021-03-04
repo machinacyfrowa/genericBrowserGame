@@ -27,7 +27,7 @@ class GameManager
     {
         $this->s->check($this->t);
 
-        //na koniec
+        //na koniec synchronizuj z obecnym czasem
         $this->v->gain($this->deltaTime());
         $this->t = time();
         

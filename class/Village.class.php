@@ -114,7 +114,7 @@ class Village
             $this->storage[$key] -= $value;
         }
         //odwołanie do scheduelra
-        $this->gm->s->add(time()+300, 'Village', 'scheduledBuildingUpgrade', $buildingName);
+        $this->gm->s->add(time()+60, 'Village', 'scheduledBuildingUpgrade', $buildingName);
         
         return true;
     }
