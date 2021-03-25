@@ -49,6 +49,7 @@ class Village
             $building = array();
             $building['buildingName'] = $buildingName;
             $building['buildingLVL'] = $buildingLVL;
+            $building['upgradePossible'] = $this->checkBuildingUpgrade($buildingName);
             if(isset($this->upgradeCost[$buildingName][$buildingLVL+1] ))
                 $building['upgradeCost'] = $this->upgradeCost[$buildingName][$buildingLVL+1] ;
             else 

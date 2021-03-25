@@ -36,7 +36,6 @@ $mainContent .= "<tr>
                 
 $mainContent .= "</table>";
 $mainContent .= "<h3>Obecne armie:</h3>";
-$armyList = $gm->getArmyList();
 $mainContent .= "<table class=\"table table-bordered\">";
 $mainContent .= "<tr>
                     <th>Nazwa armii</th>
@@ -44,6 +43,8 @@ $mainContent .= "<tr>
                     <th>Łucznicy</th>
                     <th>Kawaleria</th>
                 </tr>";
+
+
 if(is_array($armyList)) 
 {
     foreach($armyList as $army)
