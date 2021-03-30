@@ -74,6 +74,7 @@ $gm->sync(); //przelicz surowce
         } 
 $smarty->assign('wood', $v->showStorage("wood"));      
 $smarty->assign('iron', $v->showStorage("iron"));        
+$smarty->assign('food', $v->showStorage("food"));       
 
 $smarty->assign('logArray', $gm->l->getLog());
 $smarty->display('index.tpl');     

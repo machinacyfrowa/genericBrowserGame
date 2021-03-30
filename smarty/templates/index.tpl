@@ -13,7 +13,7 @@
                         Żelazo: {$iron}
                     </div>
                     <div class="col-12 col-md-3">
-                        Zasób 3
+                        Jedzenie: {$food}
                     </div>
                     <div class="col-12 col-md-3">
                         Zasób 4
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-3">
-                Guzik wyloguj
+                <a href="sandbox/resetSesji.php">Reset</a>
             </div>
         </header>
         <main class="row border-bottom">
