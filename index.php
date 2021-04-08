@@ -1,8 +1,10 @@
 <?php 
 /* begin smarty init */
 require(__DIR__.'/smarty/libs/Smarty.class.php');
+require_once(__DIR__.'/class/DB.class.php');
 
 $smarty = new Smarty();
+$db = new DB();
 
 $smarty->setTemplateDir(__DIR__.'/smarty/templates');
 $smarty->setCompileDir(__DIR__.'/smarty/templates_c');
@@ -15,6 +17,11 @@ $smarty->assign('mainContent', "village.tpl"); //default view
 /* end smarty init */
 require_once('./class/GameManager.class.php');
 session_start();
+if(!isset($_SESSION['player_id']) && !isset($_REQUEST['login']))
+{
+    $smarty->display('login.tpl');
+    exit;
+}
 if(!isset($_SESSION['gm'])) // jeżeli nie ma w sesji naszej wioski
     {
     $gm = new GameManager();
@@ -31,6 +38,29 @@ $gm->sync(); //przelicz surowce
         {
             switch($_REQUEST['action'])
             {
+                case 'register':
+                    if(isset($_REQUEST['login']) && isset($_REQUEST['password']))
+                    {
+                        //zapisz usera do bazy
+                        $db->registerPlayer($_REQUEST['login'], $_REQUEST['password']);
+                    }
+                    else 
+                    {
+                        $smarty->display('register.tpl');
+                        exit;
+                    }
+                break;
+                case 'login':
+                    if(isset($_REQUEST['login']) && isset($_REQUEST['password']))
+                    {
+                        $db->loginPlayer($_REQUEST['login'], $_REQUEST['password']);
+                    }
+                    else
+                    {
+                        $smarty->display('login.tpl');
+                        exit;
+                    }
+                break;
                 case 'upgradeBuilding':
                     $v->upgradeBuilding($_REQUEST['building']);
                     $smarty->assign('buildingList', $v->buildingList());
@@ -72,10 +102,12 @@ $gm->sync(); //przelicz surowce
                     $gm->l->log("Nieprawidłowa zmienna \"action\"", "controller", "error");
             }
         } 
+$smarty->assign('playerLogin', $_SESSION['player_login']);
 $smarty->assign('wood', $v->showStorage("wood"));      
 $smarty->assign('iron', $v->showStorage("iron"));        
 $smarty->assign('food', $v->showStorage("food"));       
 
 $smarty->assign('logArray', $gm->l->getLog());
 $smarty->display('index.tpl');     
+
 ?>
