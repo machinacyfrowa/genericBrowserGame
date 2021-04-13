@@ -14,7 +14,11 @@ class DB
         $query = $this->conn->prepare("INSERT INTO player (id, login, password) 
                                         VALUES (NULL, ?, ?)");
         $query->bind_param("ss", $login, $passwordHash);
-        return $query->execute();
+        $result = $query->execute();
+        if($result) {
+            $this->newVillage($query->insert_id);
+        }
+        return $result;
     }
     public function loginPlayer(string $login, string $password) : bool 
     {
@@ -31,6 +35,17 @@ class DB
         }
         else
             return false;
+    }
+    public function newVillage(int $player_id) {
+        $query = $this->conn->prepare("INSERT INTO village (id, player_id, townHall, woodcutter, ironMine, farm)
+                                VALUES (NULL, ?, ?, ?, ?, ?");
+        $query->bind_param('iiiii', $player_id, 1, 1, 0, 0);
+        $query->execute();
+    }
+    
+    public function saveVillage(Village $v) {
+        $buildings = $v->buildingLevelList();
+        $query = $this->conn->prepare("UPDATE");
     }
 }
 

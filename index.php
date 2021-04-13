@@ -21,7 +21,7 @@ if(!isset($_SESSION['player_id']) && !isset($_REQUEST['login']))
 {
     $smarty->display('login.tpl');
     exit;
-}
+} 
 if(!isset($_SESSION['gm'])) // jeżeli nie ma w sesji naszej wioski
     {
     $gm = new GameManager();
@@ -53,7 +53,9 @@ $gm->sync(); //przelicz surowce
                 case 'login':
                     if(isset($_REQUEST['login']) && isset($_REQUEST['password']))
                     {
+                        //zaloguj gracza
                         $db->loginPlayer($_REQUEST['login'], $_REQUEST['password']);
+                        
                     }
                     else
                     {

@@ -50,6 +50,9 @@ class Village
         );
         $this->log('Utworzono nową wioskę', 'info');
     }
+    public function buildingLevelList() : array {
+        return $this->buildings;
+    }
     public function buildingList() : array {
         $buildingList = array();
         foreach($this->buildings as $buildingName => $buildingLVL)
