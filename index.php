@@ -114,19 +114,22 @@ Route::add('/townsquare', function () {
     $smarty->display('index.tpl');
 });
 
+Route::add('/upgradeBuilding', function () {
+    global $smarty, $v, $gm;
+    $v->upgradeBuilding($_REQUEST['building']);
+    $smarty->assign('buildingList', $v->buildingList());
+    $buildingUpgrades = $gm->s->getTasksByFunction("scheduledBuildingUpgrade");
+    $smarty->assign('buildingUpgrades', $buildingUpgrades);
+    $smarty->assign('mainContent', "townHall.tpl");
+    $smarty->display('index.tpl');
+}, 'post');
 
 Route::run('/');
 exit;
 
 if (isset($_REQUEST['action'])) {
     switch ($_REQUEST['action']) {
-        case 'upgradeBuilding':
-            $v->upgradeBuilding($_REQUEST['building']);
-            $smarty->assign('buildingList', $v->buildingList());
-            $buildingUpgrades = $gm->s->getTasksByFunction("scheduledBuildingUpgrade");
-            $smarty->assign('buildingUpgrades', $buildingUpgrades);
-            $smarty->assign('mainContent', "townHall.tpl");
-            break;
+
         case 'newUnit':
             if (isset($_REQUEST['spearmen'])) //kliknelismy wyszkol przy włócznikach
             {
