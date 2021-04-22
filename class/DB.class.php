@@ -26,6 +26,8 @@ class DB
         $query->bind_param("s", $login);
         $query->execute();
         $result = $query->get_result();
+        if($result->num_rows == 0)
+            return false;
         $player = $result->fetch_assoc();
         if(password_verify($password, $player['password']))
         {
@@ -38,8 +40,8 @@ class DB
     }
     public function newVillage(int $player_id) {
         $query = $this->conn->prepare("INSERT INTO village (id, player_id, townHall, woodcutter, ironMine, farm)
-                                VALUES (NULL, ?, ?, ?, ?, ?");
-        $query->bind_param('iiiii', $player_id, 1, 1, 0, 0);
+                                VALUES (NULL, ?, 1, 1, 0, 0)");
+        $query->bind_param('i', $player_id,);
         $query->execute();
     }
     

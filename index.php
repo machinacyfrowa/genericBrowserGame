@@ -19,6 +19,8 @@ $smarty->assign('config', array(
     'datetime' => '%H:%M:%S %d.%m.%Y'
 ));
 
+
+
 if (!isset($_SESSION['gm'])) // jeżeli nie ma w sesji naszej gry
 {
     $gm = new GameManager();
@@ -26,21 +28,67 @@ if (!isset($_SESSION['gm'])) // jeżeli nie ma w sesji naszej gry
 } else //mamy już gre w sesji - przywróć ją
 {
     $gm = $_SESSION['gm'];
+    
 }
 $v = $gm->v;
 $gm->sync();
 
+$smarty->assign('wood', $v->showStorage("wood"));
+$smarty->assign('iron', $v->showStorage("iron"));
+$smarty->assign('food', $v->showStorage("food"));
+$smarty->assign('logArray', $gm->l->getLog());
+
 Route::add('/', function () {
     global $smarty;
-    $smarty->assign('wood', $v->showStorage("wood"));
-    $smarty->assign('iron', $v->showStorage("iron"));
-    $smarty->assign('food', $v->showStorage("food"));
+    
     $smarty->assign('mainContent', "village.tpl");
     $smarty->display('index.tpl');
 });
 
+Route::add('/login', function () {
+    global $smarty;
+    $smarty->display('login.tpl');
+});
 
+Route::add('/login', function () {
+    //proces logowania
+    global $smarty, $db;
+    if (isset($_REQUEST['login']) && isset($_REQUEST['password'])) {
+        //zaloguj gracza
+        if($db->loginPlayer($_REQUEST['login'], $_REQUEST['password'])) {//spróbuj zalogować
+            //udało się
+            $smarty->display('index.tpl'); //do zmiany
+            exit;
+        } else {
+            //nie udało się
+            $smarty->assign('error', "Niepoprawny login lub hasło!");
+            $smarty->display('login.tpl');
+            exit;
+        } 
+    }
+}, 'post');
 
+Route::add('/register', function () {
+    global $smarty;
+    $smarty->display('register.tpl');
+});
+
+Route::add('/register', function () {
+    global $smarty, $db;
+    if (isset($_REQUEST['login']) && isset($_REQUEST['password'])) {
+        //zapisz usera do bazy
+        if($db->registerPlayer($_REQUEST['login'], $_REQUEST['password'])) {//próbujemy zapisać do bazy
+            //udało sie
+            $smarty->display('login.tpl');
+        } else {
+            //nie udało się utworzyc konta
+            $smarty->assign('error', "Niepoprawny nie udało się utworzyć konta!");
+            $smarty->display('register.tpl');
+            exit;
+        }
+    }
+    
+}, 'post');
 
 Route::run('/');
 exit;
@@ -126,5 +174,5 @@ if (isset($_REQUEST['action'])) {
 $smarty->assign('playerLogin', $_SESSION['player_login']);
 
 
-$smarty->assign('logArray', $gm->l->getLog());
+
 $smarty->display('index.tpl');

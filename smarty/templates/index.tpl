@@ -2,7 +2,7 @@
     <div class="container">
         <header class="row border-bottom">
             <div class="col-12 col-md-3">
-                Gracz: {$playerLogin}
+                Gracz: {$playerLogin|default:"anonim"}
             </div>
             <div class="col-12 col-md-6">
                 <div class="row">

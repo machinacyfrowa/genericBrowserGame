@@ -3,7 +3,7 @@
     <div class="row mt-5">
         <div class="col-md-6 offset-md-3 text-center">
             <h1>Zaloguj się</h1>
-            <form action="index.php" method="post">
+            <form action="/login" method="post">
                 <input type="hidden" name="action" value="login">
                 <div class="form-group">
                     <label for="login">Adres e-mail:</label>
@@ -14,6 +14,11 @@
                     <input class="form-control" type="password" name="password" id="password">  
                 </div>
                 <button class="btn btn-primary" type="submit">Zaloguj się</button>
+                {if isset($error)}
+                <div class="alert alert-danger" role="alert">
+                    {$error}
+                </div>
+                {/if}
             </form>
         </div>
     </div>

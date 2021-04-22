@@ -3,7 +3,7 @@
     <div class="row mt-5">
         <div class="col-md-6 offset-md-3 text-center">
             <h1>Utwórz nowe konto</h1>
-            <form action="index.php" method="post">
+            <form action="/register" method="post">
                 <input type="hidden" name="action" value="register">
                 <div class="form-group">
                     <label for="login">Adres e-mail:</label>
