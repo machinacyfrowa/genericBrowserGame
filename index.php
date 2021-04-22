@@ -43,7 +43,6 @@ Route::add('/', function () {
     {
         global $smarty;
         $smarty->display('login.tpl');
-        exit;
         
     }
     $smarty->assign('mainContent', "village.tpl");
@@ -65,12 +64,10 @@ Route::add('/login', function () {
             $gm = new GameManager();
             $_SESSION['gm'] = $gm;
             header('Location: /');
-            exit;
         } else {
             //nie udało się
             $smarty->assign('error', "Niepoprawny login lub hasło!");
             $smarty->display('login.tpl');
-            exit;
         } 
     }
 }, 'post');
@@ -91,7 +88,6 @@ Route::add('/register', function () {
             //nie udało się utworzyc konta
             $smarty->assign('error', "Niepoprawny nie udało się utworzyć konta!");
             $smarty->display('register.tpl');
-            exit;
         }
     }
     
@@ -101,6 +97,16 @@ Route::add('/logout', function () {
     session_destroy();
     header('Location: /login');
 });
+
+Route::add('/townhall', function () {
+    global $smarty, $v, $gm;
+    $smarty->assign('buildingList', $v->buildingList());
+    $buildingUpgrades = $gm->s->getTasksByFunction("scheduledBuildingUpgrade");
+    $smarty->assign('buildingUpgrades', $buildingUpgrades);
+    $smarty->assign('mainContent', "townHall.tpl");
+    $smarty->display('index.tpl');
+});
+
 
 Route::run('/');
 exit;
