@@ -32,7 +32,7 @@
                         <a href="/townhall">Ratusz</a>
                     </li>
                     <li>
-                        <a href="index.php?action=townSquare">Plac</a>
+                        <a href="/townsquare">Plac</a>
                     </li>
                 </ul>
             </div>

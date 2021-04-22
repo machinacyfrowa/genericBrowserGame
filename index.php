@@ -107,6 +107,13 @@ Route::add('/townhall', function () {
     $smarty->display('index.tpl');
 });
 
+Route::add('/townsquare', function () {
+    global $smarty, $v, $gm;
+    $smarty->assign('armyList', $gm->getArmyList());
+    $smarty->assign('mainContent', "townSquare.tpl");
+    $smarty->display('index.tpl');
+});
+
 
 Route::run('/');
 exit;
