@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-3">
-                <a href="sandbox/resetSesji.php">Reset</a>
+                <a href="/logout">Reset</a>
             </div>
         </header>
         <main class="row border-bottom">

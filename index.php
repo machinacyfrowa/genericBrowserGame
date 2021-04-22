@@ -21,26 +21,31 @@ $smarty->assign('config', array(
 
 
 
-if (!isset($_SESSION['gm'])) // jeżeli nie ma w sesji naszej gry
-{
-    $gm = new GameManager();
-    $_SESSION['gm'] = $gm;
-} else //mamy już gre w sesji - przywróć ją
-{
+if(isset($_SESSION['gm'])) {
     $gm = $_SESSION['gm'];
-    
-}
-$v = $gm->v;
-$gm->sync();
+    if(isset($_SESSION['player_login']))
+    {
+        $smarty->assign('playerLogin', $_SESSION['player_login']);
+        $v = $gm->v;
+        $gm->sync();
 
-$smarty->assign('wood', $v->showStorage("wood"));
-$smarty->assign('iron', $v->showStorage("iron"));
-$smarty->assign('food', $v->showStorage("food"));
-$smarty->assign('logArray', $gm->l->getLog());
+        $smarty->assign('wood', $v->showStorage("wood"));
+        $smarty->assign('iron', $v->showStorage("iron"));
+        $smarty->assign('food', $v->showStorage("food"));
+        $smarty->assign('logArray', $gm->l->getLog());
+    }
+
+}
 
 Route::add('/', function () {
     global $smarty;
-    
+    if (!isset($_SESSION['gm'])) // jeżeli nie ma w sesji naszej gry
+    {
+        global $smarty;
+        $smarty->display('login.tpl');
+        exit;
+        
+    }
     $smarty->assign('mainContent', "village.tpl");
     $smarty->display('index.tpl');
 });
@@ -57,7 +62,9 @@ Route::add('/login', function () {
         //zaloguj gracza
         if($db->loginPlayer($_REQUEST['login'], $_REQUEST['password'])) {//spróbuj zalogować
             //udało się
-            $smarty->display('index.tpl'); //do zmiany
+            $gm = new GameManager();
+            $_SESSION['gm'] = $gm;
+            header('Location: /');
             exit;
         } else {
             //nie udało się
@@ -89,6 +96,11 @@ Route::add('/register', function () {
     }
     
 }, 'post');
+
+Route::add('/logout', function () {
+    session_destroy();
+    header('Location: /login');
+});
 
 Route::run('/');
 exit;
