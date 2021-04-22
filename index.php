@@ -118,45 +118,8 @@ Route::add('/townsquare', function () {
 Route::run('/');
 exit;
 
-$smarty->assign('mainContent', "village.tpl"); //default view
-/* end smarty init */
-
-
-if (!isset($_SESSION['player_id']) && !isset($_REQUEST['login'])) {
-    $smarty->display('login.tpl');
-    exit;
-}
-if (!isset($_SESSION['gm'])) // jeżeli nie ma w sesji naszej wioski
-{
-    $gm = new GameManager();
-    $_SESSION['gm'] = $gm;
-} else //mamy już wioskę w sesji - przywróć ją
-{
-    $gm = $_SESSION['gm'];
-}
-//niezależnie cyz nowa gra czy załadowana
-//przelicz surowce
-
 if (isset($_REQUEST['action'])) {
     switch ($_REQUEST['action']) {
-        case 'register':
-            if (isset($_REQUEST['login']) && isset($_REQUEST['password'])) {
-                //zapisz usera do bazy
-                $db->registerPlayer($_REQUEST['login'], $_REQUEST['password']);
-            } else {
-                $smarty->display('register.tpl');
-                exit;
-            }
-            break;
-        case 'login':
-            if (isset($_REQUEST['login']) && isset($_REQUEST['password'])) {
-                //zaloguj gracza
-                $db->loginPlayer($_REQUEST['login'], $_REQUEST['password']);
-            } else {
-                $smarty->display('login.tpl');
-                exit;
-            }
-            break;
         case 'upgradeBuilding':
             $v->upgradeBuilding($_REQUEST['building']);
             $smarty->assign('buildingList', $v->buildingList());
@@ -181,23 +144,8 @@ if (isset($_REQUEST['action'])) {
             $smarty->assign('armyList', $gm->getArmyList());
             $smarty->assign('mainContent', "townSquare.tpl");
             break;
-        case 'townHall':
-            $smarty->assign('buildingList', $v->buildingList());
-            $buildingUpgrades = $gm->s->getTasksByFunction("scheduledBuildingUpgrade");
-            $smarty->assign('buildingUpgrades', $buildingUpgrades);
-            $smarty->assign('mainContent', "townHall.tpl");
-            break;
-        case 'townSquare':
-            $smarty->assign('armyList', $gm->getArmyList());
-            $smarty->assign('mainContent', "townSquare.tpl");
-            break;
         default:
 
             $gm->l->log("Nieprawidłowa zmienna \"action\"", "controller", "error");
     }
 }
-$smarty->assign('playerLogin', $_SESSION['player_login']);
-
-
-
-$smarty->display('index.tpl');
