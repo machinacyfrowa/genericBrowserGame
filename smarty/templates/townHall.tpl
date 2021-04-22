@@ -20,9 +20,10 @@
     </td>
     <td>
     {if $building.upgradePossible}
-        <a href="index.php?action=upgradeBuilding&building={$building.buildingName}">
-            <button>Rozbuduj</button>
-    </a>
+        <form action="/upgradeBuilding" method="POST">
+            <input type="hidden" name="building" value="{$building.buildingName}">
+            <button type="submit">Rozbuduj</button>
+        </form>
     {/if}
     </td>
     </tr>

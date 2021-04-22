@@ -124,31 +124,26 @@ Route::add('/upgradeBuilding', function () {
     $smarty->display('index.tpl');
 }, 'post');
 
+Route::add('/newUnit', function () {
+    global $smarty, $v, $gm;
+    if (isset($_REQUEST['spearmen'])) //kliknelismy wyszkol przy włócznikach
+    {
+        $count = $_REQUEST['spearmen']; //ilość nowych włóczników
+        $gm->newArmy($count, 0, 0, $v); //tworz nowy oddział włóczników w wiosce w ilosci $count;
+    }
+    if (isset($_REQUEST['archer'])) {
+        $count = $_REQUEST['archer'];
+        $gm->newArmy(0, $count, 0, $v);
+    }
+    if (isset($_REQUEST['cavalry'])) {
+        $count = $_REQUEST['cavalry'];
+        $gm->newArmy(0, 0, $count, $v);
+    }
+    $smarty->assign('armyList', $gm->getArmyList());
+    $smarty->assign('mainContent', "townSquare.tpl");
+    $smarty->display('index.tpl');
+}, 'post');
+
 Route::run('/');
 exit;
 
-if (isset($_REQUEST['action'])) {
-    switch ($_REQUEST['action']) {
-
-        case 'newUnit':
-            if (isset($_REQUEST['spearmen'])) //kliknelismy wyszkol przy włócznikach
-            {
-                $count = $_REQUEST['spearmen']; //ilość nowych włóczników
-                $gm->newArmy($count, 0, 0, $v); //tworz nowy oddział włóczników w wiosce w ilosci $count;
-            }
-            if (isset($_REQUEST['archer'])) {
-                $count = $_REQUEST['archer'];
-                $gm->newArmy(0, $count, 0, $v);
-            }
-            if (isset($_REQUEST['cavalry'])) {
-                $count = $_REQUEST['cavalry'];
-                $gm->newArmy(0, 0, $count, $v);
-            }
-            $smarty->assign('armyList', $gm->getArmyList());
-            $smarty->assign('mainContent', "townSquare.tpl");
-            break;
-        default:
-
-            $gm->l->log("Nieprawidłowa zmienna \"action\"", "controller", "error");
-    }
-}
